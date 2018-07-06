@@ -98,6 +98,10 @@ class CPUMonitor():
 
         self._check_core_temps = rospy.get_param('~check_core_temps', True)
         self._check_cpu_clocks = rospy.get_param('~check_cpu_clocks', True)
+        if self._check_cpu_clocks:
+          rospy.loginfo("check_cpu_clocks: True")
+        else:
+          rospy.loginfo("check_cpu_clocks: False")
 
         self._cpu_load_warn = rospy.get_param('~cpu_load_warn', cpu_load_warn)
         self._cpu_load_error = rospy.get_param('~cpu_load_error', cpu_load_error)
