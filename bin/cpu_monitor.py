@@ -97,6 +97,7 @@ class CPUMonitor():
         self._mutex = threading.Lock()
 
         self._check_core_temps = rospy.get_param('~check_core_temps', True)
+        self._check_cpu_clocks = rospy.get_param('~check_cpu_clocks', True)
 
         self._cpu_load_warn = rospy.get_param('~cpu_load_warn', cpu_load_warn)
         self._cpu_load_error = rospy.get_param('~cpu_load_error', cpu_load_error)
@@ -452,10 +453,11 @@ class CPUMonitor():
         diag_msgs = []
 
         # Check clock speed
-        clock_vals, clock_msgs, clock_level = self.check_clock_speed()
-        diag_vals.extend(clock_vals)
-        diag_msgs.extend(clock_msgs)
-        diag_level = max(diag_level, clock_level)
+        if self._check_cpu_clocks:
+            clock_vals, clock_msgs, clock_level = self.check_clock_speed()
+            diag_vals.extend(clock_vals)
+            diag_msgs.extend(clock_msgs)
+            diag_level = max(diag_level, clock_level)
 
         # Check mpstat
         mp_level, mp_msg, mp_vals = self.check_mpstat()
