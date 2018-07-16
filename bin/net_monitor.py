@@ -105,6 +105,8 @@ class NetMonitor():
     self._mutex = threading.Lock()
     self._net_level_warn = rospy.get_param('~net_level_warn', net_level_warn)
     self._net_capacity = rospy.get_param('~net_capacity', net_capacity)
+    self._net_interfaces = rospy.get_param('~net_interfaces', [])
+    rospy.loginfo("Interfaces set to %s", self._net_interfaces[0])
     self._usage_timer = None
     self._usage_stat = DiagnosticStatus()
     self._usage_stat.name = 'Network Usage (%s)' % diag_hostname
@@ -139,8 +141,11 @@ class NetMonitor():
       rows = stdout.split('\n')
       data = rows[0].split()
       ifaces = []
-      for i in range(0, len(data)):
-        ifaces.append(data[i])
+      if len(self._net_interfaces) >0:
+        ifaces = self._net_interfaces
+      else:
+        for i in range(0, len(data)):
+          ifaces.append(data[i])
       data = rows[2].split()
       kb_in = []
       kb_out = []
